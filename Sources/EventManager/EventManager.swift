@@ -46,8 +46,8 @@ public final class EventManager: EventManagerProtocol {
       currentGroup.undoList.push(event)
       currentGroup.redoList = EventStack()
     } else {
-      enableRegistrationUndo = true
       currentGroup.redoList.push(event)
+      enableRegistrationUndo = true
     }
     canRedo = !currentGroup.redoList.isEmpty
     canUndo = !currentGroup.undoList.isEmpty
@@ -56,8 +56,8 @@ public final class EventManager: EventManagerProtocol {
   public func undo() {
     if let event = currentGroup.undoList.pop() {
       RunLoop.main.perform { [weak self] in
-        event.handler(event.target)
         self?.enableRegistrationUndo = false
+        event.handler(event.target)
       }
     }
     
@@ -68,8 +68,8 @@ public final class EventManager: EventManagerProtocol {
   public func redo() {
     if let event = currentGroup.redoList.pop() {
       RunLoop.main.perform { [weak self] in
-        event.handler(event.target)
         self?.enableRegistrationUndo = false
+        event.handler(event.target)
       }
     }
     canRedo = !currentGroup.redoList.isEmpty
