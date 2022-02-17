@@ -92,8 +92,6 @@ public final class EventManager: EventManagerProtocol {
           }
       })
       
-      redoGroup.append(group)
-      
       canRedo = !redoGroup.isEmpty
       canUndo = !undoGroup.isEmpty
     } else {
@@ -117,8 +115,6 @@ public final class EventManager: EventManagerProtocol {
             event.handler(event.target)
         }
       })
-      
-      redoGroup.append(group)
       
       canRedo = !redoGroup.isEmpty
       canUndo = !undoGroup.isEmpty
