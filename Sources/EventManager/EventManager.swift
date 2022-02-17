@@ -4,21 +4,21 @@ protocol EventManagerProtocol {
   /// Регестрируем событие
   func register(target: AnyObject, handler: @escaping (AnyObject) -> ())
   /// Отменяем событие
-//  func undo()
-//  /// Восстанавливаем событие
-//  func redo()
-//  /// Очищаем все события
-//  func endEvents()
-//
-//  var canUndo: Bool { get }
-//  var canRedo: Bool { get }
+  func undo()
+  /// Восстанавливаем событие
+  func redo()
+  /// Очищаем все события
+  func endEvents()
+
+  var canUndo: Bool { get }
+  var canRedo: Bool { get }
 }
 
 public protocol EventManagerDelegate: AnyObject {}
 
 public final class EventManager: EventManagerProtocol {
-  var canUndo: Bool = false
-  var canRedo: Bool = false
+  public var canUndo: Bool = false
+  public var canRedo: Bool = false
   
   private var currentLevel: Int
   private var groupList = LinkedList()
