@@ -28,6 +28,7 @@ public final class EventManager: EventManagerProtocol {
   }
   
   private var enableRegistrationUndo: Bool = true
+  private var calledUndo: Bool = false
   
   weak var delegate: EventManagerDelegate?
   
@@ -46,7 +47,11 @@ public final class EventManager: EventManagerProtocol {
       currentGroup.undoList.push(event)
       currentGroup.redoList = EventStack()
     } else {
-      currentGroup.redoList.push(event)
+      if calledUndo {
+        currentGroup.redoList.push(event)
+      } else {
+        currentGroup.undoList.push(event)
+      }
       enableRegistrationUndo = true
     }
     canRedo = !currentGroup.redoList.isEmpty
@@ -57,6 +62,7 @@ public final class EventManager: EventManagerProtocol {
     if let event = currentGroup.undoList.pop() {
       RunLoop.main.perform { [weak self] in
         self?.enableRegistrationUndo = false
+        self?.calledUndo = true
         event.handler(event.target)
       }
     }
@@ -69,6 +75,7 @@ public final class EventManager: EventManagerProtocol {
     if let event = currentGroup.redoList.pop() {
       RunLoop.main.perform { [weak self] in
         self?.enableRegistrationUndo = false
+        self?.calledUndo = false
         event.handler(event.target)
       }
     }
