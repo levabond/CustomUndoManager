@@ -33,7 +33,7 @@ public final class EventManager: EventManagerProtocol {
   weak var delegate: EventManagerDelegate?
   
   public init() {
-    currentLevel = 1
+    currentLevel = 0
     groupList.append(EventGroup())
   }
   
