@@ -28,7 +28,7 @@ public final class EventManager: EventManagerProtocol {
   private var groupOpen: Bool = false
   
   private var currentNode: EventGroup {
-    undoGroup[currentLevel]
+    undoGroup.isEmpty ? EventGroup() : undoGroup[currentLevel]
   }
   
   private var enableRegistrationUndo: Bool = true
