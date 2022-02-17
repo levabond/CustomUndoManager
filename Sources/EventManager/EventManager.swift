@@ -1,0 +1,90 @@
+import Foundation
+
+protocol EventManagerProtocol {
+  /// Регестрируем событие
+  func register(target: AnyObject, handler: @escaping (AnyObject) -> ())
+  /// Отменяем событие
+//  func undo()
+//  /// Восстанавливаем событие
+//  func redo()
+//  /// Очищаем все события
+//  func endEvents()
+//
+//  var canUndo: Bool { get }
+//  var canRedo: Bool { get }
+}
+
+public protocol EventManagerDelegate: AnyObject {}
+
+public final class EventManager: EventManagerProtocol {
+  var canUndo: Bool = false
+  var canRedo: Bool = false
+  
+  private var currentLevel: Int
+  private var groupList = LinkedList()
+  private var groupOpen: Bool = false
+  
+  private var currentGroup: EventGroup {
+    groupList[currentLevel]
+  }
+  
+  private var enableRegistrationUndo: Bool = true
+  
+  weak var delegate: EventManagerDelegate?
+  
+  public init() {
+    currentLevel = 1
+    groupList.append(EventGroup())
+  }
+  
+  public func register(
+    target: AnyObject,
+    handler: @escaping (AnyObject) -> ()
+  ) {
+    let event = Event(target: target, handler: handler)
+    
+    if enableRegistrationUndo {
+      currentGroup.undoList.push(event)
+      currentGroup.redoList = EventStack()
+    } else {
+      currentGroup.redoList.push(event)
+      enableRegistrationUndo = true
+    }
+    canRedo = !currentGroup.redoList.isEmpty
+    canUndo = !currentGroup.undoList.isEmpty
+  }
+
+  public func undo() {
+    if let event = currentGroup.undoList.pop() {
+      RunLoop.main.perform { [weak self] in
+        event.handler(event.target)
+        self?.enableRegistrationUndo = false
+      }
+    }
+    
+    canRedo = !currentGroup.redoList.isEmpty
+    canUndo = !currentGroup.undoList.isEmpty
+  }
+
+  public func redo() {
+    if let event = currentGroup.redoList.pop() {
+      RunLoop.main.perform { [weak self] in
+        event.handler(event.target)
+        self?.enableRegistrationUndo = false
+      }
+    }
+    canRedo = !currentGroup.redoList.isEmpty
+  }
+  
+  func beginGroup() {
+    currentLevel += 1
+    groupList.append(EventGroup())
+  }
+  
+  func endGroup() {
+    if currentLevel > 0 {
+      currentLevel -= 1
+      groupList.removeLast()
+    }
+  }
+}
