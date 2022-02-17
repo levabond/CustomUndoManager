@@ -7,8 +7,6 @@ protocol EventManagerProtocol {
   func undo()
   /// Восстанавливаем событие
   func redo()
-  /// Очищаем все события
-  func endEvents()
 
   var canUndo: Bool { get }
   var canRedo: Bool { get }
@@ -17,6 +15,7 @@ protocol EventManagerProtocol {
 public protocol EventManagerDelegate: AnyObject {}
 
 public final class EventManager: EventManagerProtocol {
+  
   public var canUndo: Bool = false
   public var canRedo: Bool = false
   
