@@ -46,8 +46,8 @@ public final class EventManager: EventManagerProtocol {
       currentGroup.undoList.push(event)
       currentGroup.redoList = EventStack()
     } else {
-      currentGroup.redoList.push(event)
       enableRegistrationUndo = true
+      currentGroup.redoList.push(event)
     }
     canRedo = !currentGroup.redoList.isEmpty
     canUndo = !currentGroup.undoList.isEmpty
