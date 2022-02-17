@@ -57,6 +57,8 @@ public final class EventManager: EventManagerProtocol {
         redoGroup.append(group)
         enableRegistrationUndo = true
       }
+      canRedo = !redoGroup.isEmpty
+      canUndo = !undoGroup.isEmpty
       //
     } else {
       if enableRegistrationUndo {
@@ -70,10 +72,11 @@ public final class EventManager: EventManagerProtocol {
         }
         enableRegistrationUndo = true
       }
+      
+      canRedo = !currentNode.redoList.isEmpty
+      canUndo = !currentNode.undoList.isEmpty
     }
     
-    canRedo = !currentNode.redoList.isEmpty
-    canUndo = !currentNode.undoList.isEmpty
   }
 
   public func undo() {
@@ -92,6 +95,9 @@ public final class EventManager: EventManagerProtocol {
       })
       
       redoGroup.append(group)
+      
+      canRedo = !redoGroup.isEmpty
+      canUndo = !undoGroup.isEmpty
     } else {
       
       
@@ -117,6 +123,9 @@ public final class EventManager: EventManagerProtocol {
       })
       
       redoGroup.append(group)
+      
+      canRedo = !redoGroup.isEmpty
+      canUndo = !undoGroup.isEmpty
     } else {
       if let event = currentNode.redoList.pop() {
         RunLoop.main.perform { [weak self] in
