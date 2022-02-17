@@ -85,13 +85,11 @@ public final class EventManager: EventManagerProtocol {
         return
       }
       group.undoList.items.forEach({ event in
-        if let event = currentNode.undoList.pop() {
           RunLoop.main.perform { [weak self] in
             self?.enableRegistrationUndo = false
             self?.calledUndo = true
             event.handler(event.target)
           }
-        }
       })
       
       redoGroup.append(group)
@@ -113,12 +111,10 @@ public final class EventManager: EventManagerProtocol {
         return
       }
       group.undoList.items.forEach({ event in
-        if let event = currentNode.undoList.pop() {
           RunLoop.main.perform { [weak self] in
             self?.enableRegistrationUndo = false
             self?.calledUndo = true
             event.handler(event.target)
-          }
         }
       })
       
