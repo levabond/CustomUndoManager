@@ -36,6 +36,10 @@ public final class EventManager: EventManagerProtocol {
   
   weak var delegate: EventManagerDelegate?
   
+  public init() {
+    
+  }
+  
   public func register(
     target: AnyObject,
     handler: @escaping (AnyObject) -> ()
