@@ -53,6 +53,7 @@ public final class EventManager: EventManagerProtocol {
       
       if enableRegistrationUndo {
         undoGroup.append(group)
+        redoGroup = []
       } else {
         redoGroup.append(group)
         enableRegistrationUndo = true
